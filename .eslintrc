@@ -1,0 +1,10 @@
+{
+  "extends": ["react-app", "plugin:prettier/recommended", "plugin:import/warnings"],
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "moduleDirectory": ["./node_modules", "./src/"]
+      }
+    }
+  }
+}
