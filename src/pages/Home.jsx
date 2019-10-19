@@ -10,12 +10,15 @@ import Button from '@material-ui/core/Button';
 import firebase from 'firebase/app';
 
 import AuthDialog from 'components/Common/AuthDialog';
+import SearchBar from 'components/App/SearchBar';
+import InputModal from 'components/App/InputModal';
 import {incrementValue, decrementValue, userActions} from 'containers/App/actions';
 import {AUTH_TYPES} from 'utils/constants';
 
 function Home() {
   const dispatch = useDispatch();
   const [isAuthDialogOpen, setAuthDialogOpen] = useState(false);
+  const [isInputOpen, setInputOpen] = useState(false);
 
   useEffect(() => {
     const unsubscribe = firebase.auth().onAuthStateChanged(user => {
@@ -26,6 +29,10 @@ function Home() {
 
   function toggleAuthDialogState() {
     setAuthDialogOpen(!isAuthDialogOpen);
+  }
+
+  function toggleInputModal() {
+    setInputOpen(!isInputOpen);
   }
 
   const value = useSelector(state => state.app.value);
@@ -45,7 +52,11 @@ function Home() {
     dispatch(incrementValue());
   }
 
-  async function signOut() {
+  function toggleModal() {
+    setInputOpen(open => !open);
+  }
+
+  function signOut() {
     dispatch(
       userActions.request({
         authType: AUTH_TYPES.LOGOUT,
@@ -61,6 +72,9 @@ function Home() {
       alignItems="center"
       width="100%"
     >
+      <Box mt={2}>
+        <SearchBar onClick={toggleModal} />
+      </Box>
       <Box
         bgcolor={grey[200]}
         py={4}
@@ -70,19 +84,20 @@ function Home() {
         justifyContent="space-between"
         alignItems="center"
       >
-        <IconButton onClick={onSubtract}>
+        <IconButton fontSize="small" onClick={onSubtract}>
           <RemoveIcon />
         </IconButton>
-        <Typography variant="button" display="block">
+        <Typography fontSize="small" variant="button" display="block">
           {value}
         </Typography>
-        <IconButton onClick={onAdd}>
+        <IconButton fontSize="small" onClick={onAdd}>
           <AddIcon />
         </IconButton>
       </Box>
       {!isUserLoggedIn && <Button onClick={() => toggleAuthDialogState()}>Login</Button>}
       {isUserLoggedIn && <Button onClick={signOut}>Sign Out</Button>}
       <AuthDialog open={isAuthDialogOpen} handleClose={toggleAuthDialogState} />
+      <InputModal open={isInputOpen} toggleModal={toggleInputModal} />
     </Box>
   );
 }
