@@ -1,4 +1,5 @@
-import {INCREMENT, DECREMENT, USER_AUTH} from './actionTypes';
+import { Reducer } from 'redux';
+import { INCREMENT, DECREMENT, USER_AUTH } from './actionTypes';
 import {
   commonInitialState,
   requestType,
@@ -6,25 +7,15 @@ import {
   failureType,
   clearType,
 } from 'utils/redux';
+import State from 'types/State.type';
 
 const initialState = {
-  value: 0,
   currentUser: commonInitialState,
 };
 
-export default (state = initialState, action) => {
-  const {type: actionType, payload: actionPayload} = action;
+const appReducer: Reducer<State> = (state = initialState, action) => {
+  const { type: actionType, payload: actionPayload } = action;
   switch (actionType) {
-    case INCREMENT:
-      return {
-        ...state,
-        value: state.value + 1,
-      };
-    case DECREMENT:
-      return {
-        ...state,
-        value: state.value - 1,
-      };
     case requestType(USER_AUTH):
       return {
         ...state,
@@ -72,3 +63,5 @@ export default (state = initialState, action) => {
       return state;
   }
 };
+
+export default appReducer;

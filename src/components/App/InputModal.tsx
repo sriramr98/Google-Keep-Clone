@@ -3,8 +3,8 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import Box from '@material-ui/core/Box';
-import makeStyles from '@material-ui/styles/makeStyles';
-import TextAreaAutoSize from 'react-autosize-textarea';
+import makeStyles from '@material-ui/core/styles/makeStyles';
+import TextAreaAutosize from '@material-ui/core/TextareaAutosize';
 import PaletteOutlinedIcon from '@material-ui/icons/PaletteOutlined';
 import ImageOutlinedIcon from '@material-ui/icons/ImageOutlined';
 import ArchiveOutlinedIcon from '@material-ui/icons/ArchiveOutlined';
@@ -15,6 +15,10 @@ import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Tooltip from '@material-ui/core/Tooltip';
+
+import useForm from 'hooks/useForm';
+
+import Note from 'types/notes/Note.type';
 
 const useStyles = makeStyles({
   dialogBackdrop: {
@@ -42,8 +46,19 @@ const useStyles = makeStyles({
   },
 });
 
-function InputModal({open, toggleModal}) {
+interface Props {
+  open: boolean;
+  toggleModal: () => void;
+}
+
+const InputModal: React.FC<Props> = ({open, toggleModal}) => {
   const styles = useStyles();
+  const {handleInputChange, values, cleanValues} = useForm<Note>({
+    initialState: {
+      title: '',
+      content: '',
+    },
+  });
 
   function handleCloseClick() {
     onDialogClose();
@@ -52,7 +67,10 @@ function InputModal({open, toggleModal}) {
 
   function onDialogClose() {
     console.log('Save to db');
+    console.log(values);
+    cleanValues();
   }
+
   return (
     <Dialog
       onClose={onDialogClose}
@@ -67,13 +85,17 @@ function InputModal({open, toggleModal}) {
           <input
             type="text"
             name="title"
-            placeholder="title"
+            placeholder="Title"
+            onChange={handleInputChange}
+            value={values.title}
             className={`${styles.input} ${styles.titleInput}`}
             autoComplete="off"
           />
-          <TextAreaAutoSize
-            type="text"
+          <TextAreaAutosize
+            value={values.content}
+            name="content"
             placeholder="Note Content"
+            onChange={handleInputChange}
             className={`${styles.input} ${styles.contentInput}`}
             rows={4}
           />
@@ -119,6 +141,6 @@ function InputModal({open, toggleModal}) {
       </DialogActions>
     </Dialog>
   );
-}
+};
 
 export default InputModal;

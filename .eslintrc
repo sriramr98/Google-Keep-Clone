@@ -1,10 +1,15 @@
 {
-  "extends": ["react-app", "plugin:prettier/recommended", "plugin:import/warnings"],
+  "extends": ["react-app", "prettier", "plugin:import/warnings"],
   "settings": {
     "import/resolver": {
       "node": {
         "moduleDirectory": ["./node_modules", "./src/"]
       }
     }
+  },
+  "plugins": ["prettier"],
+  "rules": {
+    "prettier/prettier": "error",
+    "max-len": ["error", 80]
   }
 }

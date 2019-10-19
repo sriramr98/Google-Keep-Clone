@@ -19,10 +19,8 @@
     "firebase": "^7.2.0",
     "prop-types": "^15.7.2",
     "react": "^16.10.1",
-    "react-autosize-textarea": "^7.0.0",
     "react-dom": "^16.10.1",
     "react-redux": "^7.1.1",
-    "react-router-dom": "^5.1.2",
     "react-scripts": "3.2.0",
     "redux": "^4.0.4",
     "redux-logger": "^3.0.6",
@@ -34,10 +32,10 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "lint": "eslint . --ext .js,.jsx",
+    "lint": "eslint . --ext .ts,.tsx",
     "lint:fix": "yarn run lint -- --fix",
-    "prettier:format": "prettier --write \"./src/*.{jsx,js,css}\"",
-    "prettier:check": "prettier \"./src/*.{jsx,js,css}\" --list-different"
+    "prettier:format": "prettier --write \"./src/*.{tsx,ts,css}\"",
+    "prettier:check": "prettier \"./src/*.{tsx,ts,css}\" --list-different"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -67,10 +65,21 @@
     }
   },
   "devDependencies": {
+    "@types/firebase": "^3.2.1",
+    "@types/material-ui": "^0.21.7",
+    "@types/node": "^12.11.1",
+    "@types/prop-types": "^15.7.3",
+    "@types/react": "^16.9.9",
+    "@types/react-dom": "^16.9.2",
+    "@types/react-redux": "^7.1.5",
+    "@types/redux-logger": "^3.0.7",
+    "@types/redux-saga": "^0.10.5",
+    "@types/yup": "^0.26.24",
     "eslint-config-prettier": "^6.3.0",
     "eslint-plugin-prettier": "^3.1.1",
     "husky": "^3.0.8",
     "lint-staged": "^9.4.1",
-    "prettier": "^1.18.2"
+    "prettier": "^1.18.2",
+    "typescript": "^3.6.4"
   }
 }

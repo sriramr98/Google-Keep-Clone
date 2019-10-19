@@ -12,7 +12,7 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
-import makeStyles from '@material-ui/styles/makeStyles';
+import makeStyles from '@material-ui/core/styles/makeStyles';
 import {useDispatch, useSelector} from 'react-redux';
 
 import {userActions} from 'containers/App/actions';
@@ -22,7 +22,12 @@ import {signInValidator, signUpValidator} from 'utils/validators';
 import {AUTH_TYPES} from 'utils/constants';
 import SocialLogins from './SocialLogins';
 
+import ApplicationState from 'types/ApplicationState.type';
 import './css/authDialog.css';
+import UserInput from 'types/auth/UserInput.type';
+import AuthAction from 'types/auth/AuthAction.type';
+import AuthErrors from 'types/auth/AuthErrors.type';
+import CommonReduxState from 'types/common/CommonReduxState.type';
 
 const useStyles = makeStyles({
   dialogContentRoot: {
@@ -50,7 +55,12 @@ const useStyles = makeStyles({
   },
 });
 
-const AuthDialog = ({open, handleClose}) => {
+interface Props {
+  open: boolean;
+  handleClose: () => void;
+}
+
+const AuthDialog: React.FC<Props> = ({open, handleClose}) => {
   const styles = useStyles();
   const dispatch = useDispatch();
 
@@ -78,7 +88,7 @@ const AuthDialog = ({open, handleClose}) => {
     initialState: {
       email: '',
       password: '',
-      confirmPassword: '',
+      name: '',
     },
     validationSchema: signUpValidator,
     onSubmit: onSignUpSubmitted,
@@ -89,15 +99,19 @@ const AuthDialog = ({open, handleClose}) => {
     finished: authFinished,
     data: authData,
     error: authErrors,
-  } = useSelector(state => state.app.currentUser);
+  }: CommonReduxState = useSelector(
+    (state: ApplicationState) => state.app.currentUser
+  );
 
   const isLoading = isAuthFetching && !authFinished;
   const isAuthError = !isLoading && !authData && authErrors;
   const isAuthSuccess = !isLoading && !authErrors && authData;
 
-  function onSignInSubmitted({email, password}) {
+  const userInputActions = userActions<AuthAction>();
+
+  function onSignInSubmitted({email, password}: UserInput) {
     dispatch(
-      userActions.request({
+      userInputActions.request({
         authType: AUTH_TYPES.LOGIN_PASSWORD,
         user: {
           email,
@@ -107,9 +121,9 @@ const AuthDialog = ({open, handleClose}) => {
     );
   }
 
-  function onSignUpSubmitted({email, password}) {
+  function onSignUpSubmitted({email, password}: UserInput) {
     dispatch(
-      userActions.request({
+      userInputActions.request({
         authType: AUTH_TYPES.REGISTER_PASSWORD,
         user: {
           email,
@@ -152,8 +166,8 @@ const AuthDialog = ({open, handleClose}) => {
                 <Typography variant="h6">Create Account</Typography>
                 <SocialLogins />
                 <Typography>or use your email for registration</Typography>
-                {isAuthError && authErrors.register && (
-                  <ErrorMessage message={authErrors.message} />
+                {isAuthError && !!authErrors && !!authErrors.register && (
+                  <ErrorMessage message={authErrors && authErrors.register} />
                 )}
                 <TextField
                   fullWidth
@@ -162,8 +176,12 @@ const AuthDialog = ({open, handleClose}) => {
                   name="name"
                   disabled={isLoading}
                   onChange={handleSignUpInputChange}
-                  error={signUpErrors.name}
-                  helperText={signUpErrors && signUpErrors.name && signUpErrors.message}
+                  error={!!signUpErrors.key && signUpErrors.key === 'name'}
+                  helperText={
+                    signUpErrors.key &&
+                    signUpErrors.key === 'name' &&
+                    signUpErrors.message
+                  }
                   margin="normal"
                   variant="outlined"
                 />
@@ -174,8 +192,12 @@ const AuthDialog = ({open, handleClose}) => {
                   name="email"
                   disabled={isLoading}
                   value={signUpValues.email}
-                  error={signUpErrors.email}
-                  helperText={signUpErrors && signUpErrors.email && signUpErrors.message}
+                  error={!!signUpErrors.key && signUpErrors.key === 'email'}
+                  helperText={
+                    signUpErrors.key &&
+                    signUpErrors.key === 'email' &&
+                    signUpErrors.message
+                  }
                   onChange={handleSignUpInputChange}
                   margin="normal"
                   variant="outlined"
@@ -190,9 +212,11 @@ const AuthDialog = ({open, handleClose}) => {
                   type={showPassword ? 'text' : 'password'}
                   label="Password"
                   value={signUpValues.password}
-                  error={signUpErrors.password}
+                  error={!!signUpErrors.key && signUpErrors.key === 'password'}
                   helperText={
-                    signUpErrors && signUpErrors.password && signUpErrors.message
+                    !signUpErrors.key &&
+                    signUpErrors.key === 'password' &&
+                    signUpErrors.message
                   }
                   onChange={handleSignUpInputChange}
                   InputProps={{
@@ -216,8 +240,8 @@ const AuthDialog = ({open, handleClose}) => {
                 <Typography variant="h6">Sign in</Typography>
                 <SocialLogins />
                 <Typography>or use your account</Typography>
-                {isAuthError && authErrors.login && (
-                  <ErrorMessage message={authErrors.message} />
+                {isAuthError && !!authErrors && !!authErrors.login && (
+                  <ErrorMessage message={!!authErrors && authErrors.login} />
                 )}
                 <TextField
                   fullWidth
@@ -226,8 +250,12 @@ const AuthDialog = ({open, handleClose}) => {
                   disabled={isLoading}
                   name="email"
                   value={signInValues.email}
-                  error={signInErrors.email}
-                  helperText={signInErrors && signInErrors.email && signInErrors.message}
+                  error={!!signInErrors.key && signInErrors.key === 'email'}
+                  helperText={
+                    signInErrors.key &&
+                    signInErrors.key === 'email' &&
+                    signInErrors.message
+                  }
                   onChange={handleSignInInputChange}
                   margin="normal"
                   variant="outlined"
@@ -240,9 +268,11 @@ const AuthDialog = ({open, handleClose}) => {
                   name="password"
                   variant="outlined"
                   type={showPassword ? 'text' : 'password'}
-                  error={signInErrors.password}
+                  error={!!signInErrors.key && signInErrors.key === 'password'}
                   helperText={
-                    signInErrors && signInErrors.password && signInErrors.message
+                    signInErrors.key &&
+                    signInErrors.key === 'password' &&
+                    signInErrors.message
                   }
                   label="Password"
                   value={signInValues.password}
@@ -273,7 +303,10 @@ const AuthDialog = ({open, handleClose}) => {
               <div className="overlay">
                 <div className="overlay-panel overlay-left">
                   <h1>Welcome Back!</h1>
-                  <p>To keep connected with us please login with your personal info</p>
+                  <p>
+                    To keep connected with us please login with your personal
+                    info
+                  </p>
                   <Button
                     disabled={isLoading}
                     variant="contained"

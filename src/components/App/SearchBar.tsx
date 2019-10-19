@@ -5,7 +5,11 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import Icon from '@material-ui/core/Icon';
 
-function SearchBar({onClick}) {
+interface Props {
+  onSearchBarClick: (e: React.MouseEvent<HTMLElement, MouseEvent>) => void;
+}
+
+const SearchBar: React.FC<Props> = ({onSearchBarClick}) => {
   return (
     <Paper>
       <Box
@@ -16,7 +20,11 @@ function SearchBar({onClick}) {
         px={2}
         py={1}
       >
-        <Typography onClick={onClick} style={{width: '150px'}} variant="caption">
+        <Typography
+          onClick={onSearchBarClick}
+          style={{width: '150px'}}
+          variant="caption"
+        >
           Take a note...
         </Typography>
         <IconButton>
@@ -31,6 +39,6 @@ function SearchBar({onClick}) {
       </Box>
     </Paper>
   );
-}
+};
 
 export default SearchBar;

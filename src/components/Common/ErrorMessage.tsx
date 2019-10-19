@@ -4,7 +4,7 @@ import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import red from '@material-ui/core/colors/red';
 import ErrorIcon from '@material-ui/icons/ErrorOutline';
-import makeStyles from '@material-ui/styles/makeStyles';
+import makeStyles from '@material-ui/core/styles/makeStyles';
 
 const useStyles = makeStyles(theme => ({
   errorIcon: {
@@ -12,7 +12,11 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function ErrorMessage({message}) {
+interface Props {
+  message: string;
+}
+
+const ErrorMessage: React.FC<Props> = ({message}) => {
   const styles = useStyles();
   return (
     <Box
@@ -30,7 +34,7 @@ function ErrorMessage({message}) {
       </Typography>
     </Box>
   );
-}
+};
 
 ErrorMessage.propTypes = {
   message: PropTypes.string.isRequired,

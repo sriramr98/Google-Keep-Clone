@@ -22,9 +22,11 @@ export const logout = async () => {
   }
 };
 
-export const loginUser = async (email, password) => {
+export const loginUser = async (email: string, password: string) => {
   try {
-    const user = await firebase.auth().signInWithEmailAndPassword(email, password);
+    const user = await firebase
+      .auth()
+      .signInWithEmailAndPassword(email, password);
     return user;
   } catch (error) {
     let message = '';
@@ -49,9 +51,11 @@ export const loginUser = async (email, password) => {
   }
 };
 
-export const registerUser = async (email, password) => {
+export const registerUser = async (email: string, password: string) => {
   try {
-    const user = await firebase.auth().createUserWithEmailAndPassword(email, password);
+    const user = await firebase
+      .auth()
+      .createUserWithEmailAndPassword(email, password);
     return user;
   } catch (error) {
     const errorCode = error.code;
@@ -98,7 +102,7 @@ export const signInWithGoogle = async () => {
   }
 };
 
-export const isLoggedIn = () => {
+export const isLoggedIn = (): boolean => {
   const {currentUser} = firebase.auth();
   return currentUser !== null;
 };
