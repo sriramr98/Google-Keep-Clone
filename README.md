@@ -1,19 +1,13 @@
-# React Redux Boilerplate
+# Google Keep Clone (In progress)
 
-This is a simple React Redux Boilerplate I created for my future projects.
-This boilerplate contains
+This is a simple but detailed clone of Google Keep. Technologies used are
 
-- React (duh!)
+- Typescript
+- React
 - Redux
 - Redux-Saga
 - Firebase
 - Material UI
-
-#### Pending Functionalities
-
-- Integration Tests and UI Tests
-- Integrating with a CI/CD service
-- Deployment to Heroku/Digital Ocean/Firebase/Netlify (pick one)
 
 ## Getting Started
 
@@ -48,9 +42,11 @@ REACT_APP_FIREBASE_PROJECT_ID={projectId}
 REACT_APP_FIREBASE_STORAGE_BUCKET={storageBucketURL}
 
 REACT_APP_FIREBASE_MESSAGING_SENDER_ID={messagingSenderId}
+
+REACT_APP_FIREBASE_APP_ID={appId}
 ```
 
-#### Remove Git Setup (Optional)
+#### Remove Git Origin and transfer git to your repo (Optional)
 
 If you want to remove my previous git commits and start with this repo with new commits
 
@@ -70,25 +66,26 @@ yarn start
 
 ## Built With
 
+- [Typescript]() - The amazing Typescript language used.
 - [ReactJS](https://reactjs.org/) - The frontend web framework used
 - [Firebase](https://console.firebase.google.com) - Authentication
 - [Redux](https://redux.js.org/) - React State Management
 - [Redux Saga](https://github.com/redux-saga/redux-saga) - Redux Side Effects
 - [Material UI](https://material-ui.com/) - UI Framework for Material Design
 
-## Contributing
+<!-- ## Contributing
 
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) ( In progress ) for details on our code of conduct, and the process for submitting pull requests to us.
+Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) ( In progress ) for details on our code of conduct, and the process for submitting pull requests to us. -->
 
-## Versioning
+## Versioning (no versions out yet)
 
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/sriramr98/react-redux-boilerplate/tags).
+We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/sriramr98/Google-Keep-Clone/tags).
 
 ## Authors
 
 - **Sriram R** - _Initial work_ - [Github](https://github.com/sriramr98)
 
-See also the list of [contributors](https://github.com/sriramr98/react-redux-boilerplate/graphs/contributors) who participated in this project.
+See also the list of [contributors](https://github.com/sriramr98/Google-Keep-Clone/graphs/contributors) who participated in this project.
 
 ## License
 
