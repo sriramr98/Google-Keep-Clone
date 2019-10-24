@@ -1,8 +1,8 @@
-import { Reducer } from 'redux';
+import {Reducer} from 'redux';
 import State from './State.type';
 
 type ApplicationState = {
-  app: State
+  app: State;
 };
 
 export default ApplicationState;

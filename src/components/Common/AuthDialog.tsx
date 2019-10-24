@@ -22,11 +22,10 @@ import {signInValidator, signUpValidator} from 'utils/validators';
 import {AUTH_TYPES} from 'utils/constants';
 import SocialLogins from './SocialLogins';
 
-import ApplicationState from 'types/ApplicationState.type';
+import ApplicationState from 'types/common/ApplicationState.type';
 import './css/authDialog.css';
 import UserInput from 'types/auth/UserInput.type';
 import AuthAction from 'types/auth/AuthAction.type';
-import AuthErrors from 'types/auth/AuthErrors.type';
 import CommonReduxState from 'types/common/CommonReduxState.type';
 
 const useStyles = makeStyles({
@@ -121,13 +120,14 @@ const AuthDialog: React.FC<Props> = ({open, handleClose}) => {
     );
   }
 
-  function onSignUpSubmitted({email, password}: UserInput) {
+  function onSignUpSubmitted({email, password, name}: UserInput) {
     dispatch(
       userInputActions.request({
         authType: AUTH_TYPES.REGISTER_PASSWORD,
         user: {
           email,
           password,
+          name,
         },
       })
     );

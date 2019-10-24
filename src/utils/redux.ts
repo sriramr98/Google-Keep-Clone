@@ -12,7 +12,7 @@ export const commonInitialState: CommonReduxState = {
 
 export const createActionCreator = (type: string) => <T>(
   payload?: T
-): ReduxAction<T> => ({ type, payload: payload! });
+): ReduxAction<T> => ({type, payload: payload!});
 
 export const requestType = (constants: string) => `${constants}/REQUEST`;
 export const successType = (constants: string) => `${constants}/SUCCESS`;

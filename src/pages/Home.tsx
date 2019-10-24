@@ -15,7 +15,7 @@ import InputModal from 'components/App/InputModal';
 import {userActions} from 'containers/App/actions';
 import {AUTH_TYPES} from 'utils/constants';
 
-import ApplicationState from 'types/ApplicationState.type';
+import ApplicationState from 'types/common/ApplicationState.type';
 import AuthAction from 'types/auth/AuthAction.type';
 
 function Home() {
@@ -31,7 +31,7 @@ function Home() {
       if (user) dispatch(firebaseUserActions.success(user));
     });
     return () => unsubscribe();
-  }, [dispatch]);
+  }, []);
 
   function toggleAuthDialogState() {
     setAuthDialogOpen(!isAuthDialogOpen);

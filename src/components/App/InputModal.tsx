@@ -18,7 +18,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 
 import useForm from 'hooks/useForm';
 
-import Note from 'types/notes/Note.type';
+import Note from 'types/Note.type';
 
 const useStyles = makeStyles({
   dialogBackdrop: {

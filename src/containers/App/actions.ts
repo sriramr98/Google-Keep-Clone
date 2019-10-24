@@ -1,5 +1,5 @@
-import { INCREMENT, DECREMENT, USER_AUTH } from './actionTypes';
-import { createApiActions } from 'utils/redux';
+import {INCREMENT, DECREMENT, USER_AUTH} from './actionTypes';
+import {createApiActions} from 'utils/redux';
 
 export const incrementValue = () => ({
   type: INCREMENT,

@@ -7,7 +7,7 @@ import {
   failureType,
   clearType,
 } from 'utils/redux';
-import State from 'types/State.type';
+import State from 'types/common/State.type';
 
 const initialState = {
   currentUser: commonInitialState,

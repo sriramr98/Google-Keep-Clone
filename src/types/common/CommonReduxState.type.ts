@@ -6,6 +6,6 @@ interface CommonReduxState {
   error: AuthErrors | null;
   data: object | null;
   meta: object | null;
-};
+}
 
 export default CommonReduxState;

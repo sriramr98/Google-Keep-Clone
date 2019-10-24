@@ -1,4 +1,4 @@
-import { createStore, applyMiddleware, compose } from 'redux';
+import {createStore, applyMiddleware, compose} from 'redux';
 import reduxLogger from 'redux-logger';
 import createSagaMiddleware from 'redux-saga';
 
@@ -10,7 +10,6 @@ declare global {
     __REDUX_DEVTOOLS_EXTENSION_COMPOSE__?: typeof compose;
   }
 }
-
 
 export default (initialState = {}) => {
   let composeEnhancers = compose;

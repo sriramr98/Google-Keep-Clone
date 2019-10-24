@@ -1,6 +1,8 @@
-import { takeEvery, takeLatest, put, call, all, fork } from 'redux-saga/effects';
+import { takeLatest, put, call, all, fork } from 'redux-saga/effects';
+import firebase, { firestore } from 'firebase/app';
 
-import { INCREMENT, DECREMENT, USER_AUTH } from './actionTypes';
+import firebaseSagas from 'config/firebase';
+import { USER_AUTH } from './actionTypes';
 import {
   loginUser,
   registerUser,
@@ -9,38 +11,22 @@ import {
 } from 'utils/firebase';
 import { requestType } from 'utils/redux';
 import { userActions } from './actions';
-import { AUTH_TYPES } from 'utils/constants';
+import { AUTH_TYPES, FIREBASE_COLLECTIONS } from 'utils/constants';
 import ReduxAction from 'types/auth/ReduxAction.type';
 import AuthAction from 'types/auth/AuthAction.type';
 import UserInput from 'types/auth/UserInput.type';
 import AuthErrors from 'types/auth/AuthErrors.type';
 
 const { LOGIN_PASSWORD, REGISTER_PASSWORD, GOOGLE_SIGNIN, LOGOUT } = AUTH_TYPES;
+const { USERS } = FIREBASE_COLLECTIONS;
 
 const firebaseUserAction = userActions<firebase.auth.UserCredential>();
 const authFailureAction = userActions<AuthErrors>();
 
-function* continueIncrementAction() {
-  yield console.log('INCREMENT CALLED');
-}
-
-export function* incrementSaga() {
-  yield takeEvery(INCREMENT, continueIncrementAction);
-}
-
-function* continueDecrementAction() {
-  yield console.log('DECREMENT CALLED');
-}
-
-export function* decrementSaga() {
-  yield takeEvery(DECREMENT, continueDecrementAction);
-}
 
 export default function* appSagas() {
   yield all([
-    yield fork(incrementSaga),
-    yield fork(decrementSaga),
-    yield fork(loginRequest),
+    yield takeLatest(requestType(USER_AUTH), userAuthRequested)
   ]);
 }
 
@@ -58,7 +44,6 @@ function* userAuthRequested(action: ReduxAction<AuthAction>) {
       yield call(googleSignIn);
       break;
     case LOGOUT:
-      yield console.log('log out called');
       yield call(logoutUser);
       break;
     default:
@@ -74,7 +59,7 @@ function* loginWithPassword(user: UserInput) {
   } catch (e) {
     yield put(
       authFailureAction.failure({
-        login: e.message
+        login: e.message,
       })
     );
   }
@@ -82,12 +67,34 @@ function* loginWithPassword(user: UserInput) {
 
 function* registerWithPassword(user: UserInput) {
   try {
-    const userData = yield call(registerUser, user.email, user.password);
-    yield put(firebaseUserAction.success(userData));
+    const userData: firebase.auth.UserCredential = yield call(
+      registerUser,
+      user.email,
+      user.password
+    );
+    if (userData === null || userData.user === null) {
+      yield put(
+        authFailureAction.failure({
+          register: 'Unable to register user',
+        })
+      );
+    } else {
+      const firestore = firebase.firestore();
+      // yield call(userData.user.updateProfile, { displayName: user.name });
+      // yield call(console.log, 'User profile updated')
+      const userDoc: firestore.DocumentReference = yield call(firestore.doc, `${USERS}/${userData.user.uid}`);
+      yield call(
+        userDoc.set,
+        { labels: [], pinnedNotes: [], name: user.name },
+        { merge: true }
+      );
+      yield call(console.log, 'Updated doc')
+      yield put(firebaseUserAction.success(userData));
+    }
   } catch (e) {
     yield put(
       authFailureAction.failure({
-        register: e.message,
+        register: e.message || 'Unable to register user',
       })
     );
   }
@@ -116,6 +123,3 @@ function* invalidAction(action: ReduxAction<any>) {
   yield console.log(`Unsupported action called`, { action });
 }
 
-export function* loginRequest() {
-  yield takeLatest(requestType(USER_AUTH), userAuthRequested);
-}

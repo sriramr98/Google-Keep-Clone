@@ -4,3 +4,7 @@ export const AUTH_TYPES = {
   GOOGLE_SIGNIN: 'GOOGLE_SIGNIN',
   LOGOUT: 'LOGOUT',
 };
+
+export const FIREBASE_COLLECTIONS = {
+  USERS: 'users',
+};

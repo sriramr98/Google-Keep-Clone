@@ -1,4 +1,6 @@
 import * as firebase from 'firebase';
+import 'firebase/firestore';
+import ReduxSagaFirebase from 'redux-saga-firebase';
 
 const config = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -13,4 +15,4 @@ if (firebase.apps.length === 0) {
   firebase.initializeApp(config);
 }
 
-export default firebase;
+export default new ReduxSagaFirebase(firebase.apps[0]);
