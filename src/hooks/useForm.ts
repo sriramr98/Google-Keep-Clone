@@ -9,11 +9,11 @@ interface FormParams<T extends object> {
   onSubmit?: (values: T) => void;
 }
 
-interface UseFormReturnType<T extends object> {
+interface FormUtils<T extends object> {
   values: T;
   errors: FormError;
   handleInputChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
-  handleSubmit: () => void;
+  handleSubmit: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   cleanValues: () => void;
 }
 
@@ -21,7 +21,7 @@ const useForm = <T extends object>({
   initialState,
   validationSchema,
   onSubmit,
-}: FormParams<T>): UseFormReturnType<T> => {
+}: FormParams<T>): FormUtils<T> => {
   const [values, setValues] = useState<T>(initialState);
   const [errors, setErrors] = useState<FormError>({ message: '' });
 
@@ -32,7 +32,8 @@ const useForm = <T extends object>({
     });
   }
 
-  function handleSubmit() {
+  function handleSubmit(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    e.preventDefault();
     try {
       const isValid = validateInput();
       if (isValid) {
