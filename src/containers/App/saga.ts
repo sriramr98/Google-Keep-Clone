@@ -1,38 +1,34 @@
-import { takeLatest, put, call, all, fork } from 'redux-saga/effects';
-import firebase, { firestore } from 'firebase/app';
+import {takeLatest, put, call, all} from 'redux-saga/effects';
 
-import firebaseSagas from 'config/firebase';
-import { USER_AUTH } from './actionTypes';
+import {USER_AUTH} from './actionTypes';
 import {
   loginUser,
   registerUser,
   signInWithGoogle,
   logout,
+  getUserDoc,
 } from 'utils/firebase';
-import { requestType } from 'utils/redux';
-import { userActions } from './actions';
-import { AUTH_TYPES, FIREBASE_COLLECTIONS } from 'utils/constants';
+import {requestType} from 'utils/redux';
+import {userActions} from './actions';
+import {AUTH_TYPES, FIREBASE_COLLECTIONS} from 'utils/constants';
 import ReduxAction from 'types/auth/ReduxAction.type';
 import AuthAction from 'types/auth/AuthAction.type';
 import UserInput from 'types/auth/UserInput.type';
 import AuthErrors from 'types/auth/AuthErrors.type';
 
-const { LOGIN_PASSWORD, REGISTER_PASSWORD, GOOGLE_SIGNIN, LOGOUT } = AUTH_TYPES;
-const { USERS } = FIREBASE_COLLECTIONS;
+const {LOGIN_PASSWORD, REGISTER_PASSWORD, GOOGLE_SIGNIN, LOGOUT} = AUTH_TYPES;
+const {USERS} = FIREBASE_COLLECTIONS;
 
 const firebaseUserAction = userActions<firebase.auth.UserCredential>();
 const authFailureAction = userActions<AuthErrors>();
 
-
 export default function* appSagas() {
-  yield all([
-    yield takeLatest(requestType(USER_AUTH), userAuthRequested)
-  ]);
+  yield all([yield takeLatest(requestType(USER_AUTH), userAuthRequested)]);
 }
 
 function* userAuthRequested(action: ReduxAction<AuthAction>) {
-  const { authType, user } = action.payload;
-  yield console.log({ authType, user });
+  const {authType, user} = action.payload;
+  yield console.log({authType, user});
   switch (authType) {
     case LOGIN_PASSWORD:
       yield call(loginWithPassword, user as UserInput);
@@ -79,19 +75,18 @@ function* registerWithPassword(user: UserInput) {
         })
       );
     } else {
-      const firestore = firebase.firestore();
+      const userDoc = getUserDoc(userData.user.uid);
       // yield call(userData.user.updateProfile, { displayName: user.name });
-      // yield call(console.log, 'User profile updated')
-      const userDoc: firestore.DocumentReference = yield call(firestore.doc, `${USERS}/${userData.user.uid}`);
+      yield call(console.log, 'User profile updated');
+
       yield call(
         userDoc.set,
-        { labels: [], pinnedNotes: [], name: user.name },
-        { merge: true }
+        {labels: [], pinnedNotes: [], name: user.name},
+        {merge: true}
       );
-      yield call(console.log, 'Updated doc')
-      yield put(firebaseUserAction.success(userData));
     }
   } catch (e) {
+    console.log({e});
     yield put(
       authFailureAction.failure({
         register: e.message || 'Unable to register user',
@@ -120,6 +115,5 @@ function* logoutUser() {
 }
 
 function* invalidAction(action: ReduxAction<any>) {
-  yield console.log(`Unsupported action called`, { action });
+  yield console.log(`Unsupported action called`, {action});
 }
-

@@ -1,5 +1,6 @@
-import firebase from 'firebase/app';
-import 'firebase/auth';
+import firebase from 'config/firebase';
+
+import {FIREBASE_COLLECTIONS} from './constants';
 
 export const getIdToken = async () => {
   try {
@@ -105,6 +106,15 @@ export const signInWithGoogle = async () => {
 export const isLoggedIn = (): boolean => {
   const {currentUser} = firebase.auth();
   return currentUser !== null;
+};
+
+export const getUserDoc = (
+  id: string
+): firebase.firestore.DocumentReference => {
+  return firebase
+    .firestore()
+    .collection(FIREBASE_COLLECTIONS.USERS)
+    .doc(id);
 };
 
 export default firebase;
